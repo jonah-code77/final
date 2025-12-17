@@ -1,0 +1,13 @@
+#Enable rewrite Engine
+RewriteEngine On
+
+#Base folder
+#RewriteBase /NIIT_FINAL_PROJECT/
+
+#send everthing back to index.php if the file does not exist
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+#rewrite urls
+# RewriteRule ^([^/]+)/?$ index.php?url=$1 [L,QSA]
+RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
