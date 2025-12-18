@@ -127,14 +127,66 @@ class user{
             "status" => "error",
             "errors" => [
                 "form" => "invalid request method"
-            ]
-        ]);
+                ]
+            ]);
+        }
     }
-}
 
-public function home(){
-    View::views("home");
-}
+    public function home(){
+        View::views("home");
+    }
+
+    public function login(){
+        View::views("login");
+    }
+
+    public function logInn(){
+        header("Content-Type: application/json");
+        $errors = [];
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = isset($_POST['email']) ? trim($_POST['email']) : "";
+            $password = isset($_POST['password']) ? trim($_POST['password']) : "";
+
+            if(empty($email)){
+                 $errors["email"] = "email is required";
+            }elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+                
+                $errors["email"] = "invalid email format";
+            }
+
+            if(empty($password))  $errors["password"] =  "Password is required"; 
+                                    
+            if (!empty($errors)) {
+                    echo json_encode([
+                        "status" => "error",
+                        "errors" => $errors
+                    ]);
+                    exit;
+            }
+
+            $user = $this->users->logIn($email,$password);
+
+            if($user){
+                    Session::setSession('email',$user['email']);
+                    Session::setSession('user_id',$user['id']);
+                      //success redirection    
+                echo json_encode([
+                    "status" => "success",                 
+                    "redirect" => "/FINAL/home"
+                ]);
+                exit;
+                    
+                }else{
+                    echo json_encode([
+                        "status" => "error",
+                        "errors" => ["login" => "invalid Details"]
+                    ]);
+                    exit;
+            }
+
+        }
+    }
 
 }
 

@@ -14,6 +14,10 @@ if ($url === "register") {
 }elseif($url === 'regStudent'){
     $controller->regStudent();
     exit;
+}elseif($url === "login"){
+    $controller->login();
+}elseif($url === "logInn"){
+    $controller->logInn();
 }else{
     header("Content-Type: application/json");
     echo json_encode([

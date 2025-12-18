@@ -27,7 +27,4 @@
     <button type="submit">submit</button>
 </form>
 
-<script src="">
-    const BASE_URL = <?= BASE_URL ?>
-</script>
 <script src="<?= BASE_URL ?>/js/form.js"></script>

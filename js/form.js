@@ -53,5 +53,6 @@ class app {
     }
 }
 
-new app("regForm", "msg", `regStudent`)
+new app("regForm", "msg", `regStudent`);
+new app("logIn", "msg", "logInn");
 

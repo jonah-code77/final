@@ -2,7 +2,7 @@
 RewriteEngine On
 
 #Base folder
-#RewriteBase /NIIT_FINAL_PROJECT/
+RewriteBase /FINAL/
 
 #send everthing back to index.php if the file does not exist
 RewriteCond %{REQUEST_FILENAME} !-f

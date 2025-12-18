@@ -25,4 +25,16 @@ class users extends Dbh {
         $stmt->execute([$id]);
         return $stmt->fetch();
     }
+
+    //login 
+    public function logIn($Email,$password){
+        $sql = "SELECT * FROM users WHERE email = ? LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$Email]);
+        $user = $stmt->fetch();
+        if ($user && password_verify($password,$user['password'])) {
+            return $user;
+        }
+        return false;    
+    }
 }
