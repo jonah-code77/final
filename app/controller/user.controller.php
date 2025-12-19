@@ -27,100 +27,79 @@ class user{
             $email = isset($_POST['email']) ? trim($_POST['email']) : "";
             $dept = isset($_POST['dept']) ? trim($_POST['dept']) : "";
             $password = isset($_POST['password']) ? trim($_POST['password']) : "";
-            //$profile_picture = $_FILES['image'];
+            $profile_picture = $_FILES['img'];
 
             //registraion
-            if(empty($firstname)) $errors["firstname"] = "First Name is required";
-            if(empty($lastname)) $errors["lastname"] = "Last Name is required"; 
-            if(empty($password))  $errors["password"] =  "Password is required"; 
-            if(empty($dept))  $errors["dept"] = "dept is required";
+            $err = Validator::required($firstname, "First Name is required ");
+            if($err) $errors["firstname"] = $err;
 
-            if(empty($email)){
-                 $errors["email"] = "email is required";
-            }elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-                
-                $errors["email"] = "invalid email format";
-            }
+            $err = Validator::required($lastname, "Last Name is required ");
+            if($err) $errors["lastname"] = $err;
+   
+            $err = Validator::required($password, "password is required ");
+            if($err) $errors["password"] = $err;
 
-            if(empty($gender)){
-                 $errors["gender"] = "Gender is required";
-            }elseif(!in_array($gender, ['male', 'female'])){
-                
-                $errors["gender"] = "Gender is invalid";
-            }
+            $err = Validator::required($dept, "please input a department ");
+            if($err) $errors["dept"] = $err;
+            
+            $err = validator::required($email, "Email is required ");
+            if($err) $errors["email"] = $err;
 
-            if($this->users->studentExist($email)) $errors["email"] = "Email already registered";
+            $err = validator::email($email);
+            if($err) $errors["email"] = $err;
 
-            //images
-            if(!isset($_FILES['img'])){
-                $errors["img"] = "please upload a profile picture";
-            }else{
-                    $profile_picture = $_FILES['img'];
-                    if ($profile_picture['error'] === UPLOAD_ERR_NO_FILE) {
-                        $errors["img"] = "please upload a profile picture";
-                    }elseif($profile_picture['error'] !== UPLOAD_ERR_OK){
-                        $errors["img"] = "file not uploaded";
-                    }else{
-                    //minme validation
-                        $finfo = new finfo(FILEINFO_MIME_TYPE);
-                        $mime = $finfo->file($profile_picture['tmp_name']);
-                        $allowed_mimeType = ["image/jpeg", "image/png", "image/jpg", "image/gif"];
+            $err = validator::required($gender, "gender is required ");
+            if($err) $errors["gender"] = $err;
 
-                        if(!in_array($mime, $allowed_mimeType)) $errors["img"] = "invalid image type uploaded";
+            $err = validator::gender($gender);
+            if($err) $errors["gender"] = $err;
 
-                        //extention validation
-                        $allowed_ext = ['jpg', 'jpeg', 'png', 'gif'];
-                        $ext = strtolower(pathinfo($profile_picture['name'],PATHINFO_EXTENSION));
-                        if(!in_array($ext, $allowed_ext)) $errors["img"] = "invalid image type uploaded";
+            if($email && $this->users->studentExist($email)) $errors["email"] = "Email already registered";
 
-                        // $imageInfo = getimagesize($profile_picture["tmp_name"]);
-                        if (!@getimagesize($profile_picture['tmp_name'])) {
-                            $errors['img'] = "invalid image formaty";
-                        }
+            //images         
+            $err = Validator::image($profile_picture);
+            if($err) $errors['img'] = $err;
 
-                        //size validation
-                        if($profile_picture['size'] > 3 * 1024 * 1024) $errors["img"] =  "image size exceed 3mb";
-                }
-                        
-                if (!empty($errors)) {
-                    echo json_encode([
-                        "status" => "error",
-                        "errors" => $errors
-                    ]);
-                    exit;
-                }
-                //unique name
-                $filename = uniqid("IMG_") . "." . "$ext";
-                $uploadPath = "upload/user/" . $filename;
-
-                if(!move_uploaded_file($profile_picture['tmp_name'], $uploadPath)){
-                    echo json_encode([
-                        "status" => "error",
-                        "errors" => ["img" => "failed to upload"]
-                    ]);
-                    exit;
-                }
-
-                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-                $regStudent = $this->users->registerStudent($firstname, $lastname, $email, $gender, $hashed_password, $dept, $uploadPath);
-                
-                if(!$regStudent){
-                    echo json_encode([
-                    "status" => "error",
-                    "errors" => ["database" => "failed to register"]               
-                    ]);
-                    exit;
-                }else{
-
-                //success redirection    
+            if (!empty($errors)) {
                 echo json_encode([
-                    "status" => "success",
-                    
-                    "redirect" => "/FINAL/home"
+                    "status" => "error",
+                    "errors" => $errors
                 ]);
                 exit;
             }
+
+            $ext = strtolower(pathinfo($profile_picture['name'], PATHINFO_EXTENSION));
+            $filename = uniqid("IMG_") . "." . $ext;
+            $uploadDir = "upload/user/";
+
+            if(!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+            $uploadPath =$uploadDir. $filename;
+
+            if(!move_uploaded_file($profile_picture['tmp_name'], $uploadPath)){
+                echo json_encode([
+                    "status" => "error",
+                    "errors" => ['img' => 'failed to upload']
+                ]);
+            }
+        
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $regStudent = $this->users->registerStudent($firstname, $lastname, $email, $gender, $hashed_password, $dept, $uploadPath);
             
+            if(!$regStudent){
+                echo json_encode([
+                "status" => "error",
+                "errors" => ["database" => "failed to register"]               
+                ]);
+                exit;
+            }else{
+
+            //success redirection    
+            echo json_encode([
+                "status" => "success",
+                
+                "redirect" => "/FINAL/home"
+            ]);
+            exit;
         }
     }else{
         echo json_encode([
@@ -148,14 +127,14 @@ class user{
             $email = isset($_POST['email']) ? trim($_POST['email']) : "";
             $password = isset($_POST['password']) ? trim($_POST['password']) : "";
 
-            if(empty($email)){
-                 $errors["email"] = "email is required";
-            }elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-                
-                $errors["email"] = "invalid email format";
-            }
+            $err = Validator::required($email, "email is required");
+            if($err) $errors['email'] = $err;
 
-            if(empty($password))  $errors["password"] =  "Password is required"; 
+            $err = Validator::email($email);
+            if($err) $errors['email'] = $err;
+
+            $err = Validator::required($password, "password is required");
+            if($err) $errors['password'] = $err;
                                     
             if (!empty($errors)) {
                     echo json_encode([
@@ -170,10 +149,16 @@ class user{
             if($user){
                     Session::setSession('email',$user['email']);
                     Session::setSession('user_id',$user['id']);
-                      //success redirection    
+                      //success redirection 
+                      
+                if($user['email'] === "dd@rr.com"){
+                    $redirect = "/final/admin/dasboard";
+                }else{
+                    $redirect = "/final/home";
+                }
                 echo json_encode([
                     "status" => "success",                 
-                    "redirect" => "/FINAL/home"
+                    "redirect" => $redirect
                 ]);
                 exit;
                     

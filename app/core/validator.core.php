@@ -1,6 +1,6 @@
 <?php
 
-class validator{
+class Validator{
     //required validation
     public static function required($value, $msg){
         if (trim($value) === "") {

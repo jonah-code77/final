@@ -8,7 +8,7 @@ class app {
         this.init();
     }
 
-    showMessage(data){
+     showMessage(data){
         if (data.status === "success") {
             //ssthis.msg.innerHTML = data.msg;
             if (data.redirect) {
@@ -35,8 +35,15 @@ class app {
             method: "POST",
             body: new FormData(this.form)
         })
-        .then(res => res.json())
-        .then(data => this.showMessage(data))
+        .then(res => res.text())
+        .then(text => {
+            try {
+                const data = JSON.parse(text)
+                this.showMessage(data)
+            } catch (error) {
+                this.msg.innerHTML = "Server returned invalid JSON."
+            }
+        })
         .catch(error => {
             this.msg.innerHTML = `Error: Failed to submit form. (${error.message})`;
             console.error(error);
@@ -53,6 +60,8 @@ class app {
     }
 }
 
-new app("regForm", "msg", `regStudent`);
+new app("regForm", "msg", `regStudent`)
 new app("logIn", "msg", "logInn");
+
+
 
