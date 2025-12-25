@@ -152,7 +152,7 @@ class user{
                       //success redirection 
                       
                 if($user['email'] === "dd@rr.com"){
-                    $redirect = "/final/admin/dasboard";
+                    $redirect = "/final/admin/dashboard";
                 }else{
                     $redirect = "/final/home";
                 }

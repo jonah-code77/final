@@ -1,7 +1,7 @@
 <?php
 
 
-//BASE URL 
+//BASE URL so paths can be read easily by the browser
 DEFINE('BASE_URL', '/FINAL');
 //BASE PATH SO I CAN GET ABSOLUTE PATH AT ANY POINT
 DEFINE("BASE_PATH",__DIR__."/../");

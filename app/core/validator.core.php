@@ -39,9 +39,6 @@ class Validator{
             return "profile picture is required";
         }
 
-        if ($file['error'] !== UPLOAD_ERR_NO_FILE) {
-            return "profile picture is required";
-        }
         if($file['error'] !== UPLOAD_ERR_OK){
             return "file upload failed";
         }

@@ -41,7 +41,7 @@ class app {
                 const data = JSON.parse(text)
                 this.showMessage(data)
             } catch (error) {
-                this.msg.innerHTML = "Server returned invalid JSON."
+                this.msg.innerHTML = "Server returned invalid JSON. ".error.message
             }
         })
         .catch(error => {

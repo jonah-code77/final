@@ -1,23 +1,18 @@
 <?php
 require("app/app.php");
 
-$controller = new user();
+$controller = new admin();
 
-$url = $_GET['url'] ?? "register";
+$url = $_GET['url'] ?? "dashboard";
 
-if ($url === "register") {
-    $controller->regForm();
+if ($url === "dashboard") {
+    $controller->dashboard();
     exit;
-}elseif($url === "home"){
-    $controller->home();
+}elseif($url === "approvedStudent"){
+    $controller->approvedStudent();
     exit;
-}elseif($url === 'regStudent'){
-    $controller->regStudent();
-    exit;
-}elseif($url === "login"){
-    $controller->login();
-}elseif($url === "logInn"){
-    $controller->logInn();
+}elseif($url === "rejectStudent"){
+    $controller->rejectStudent();
 }else{
     header("Content-Type: application/json");
     echo json_encode([
@@ -25,3 +20,5 @@ if ($url === "register") {
         "msg" => "Route Not Found"
     ]);
 }
+
+

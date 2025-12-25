@@ -10,7 +10,7 @@ RewriteBase /FINAL/
 # Anything starting with admin/ goes to admin.php
 RewriteRule ^admin(?:/(.*))?$ admin.php?url=$1 [L,QSA]
 
-# ===== USER ROUTES =====
+# USER ROUTES 
 # If the requested file/folder doesn't exist, send everything else to index.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
