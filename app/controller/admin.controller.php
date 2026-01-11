@@ -22,11 +22,23 @@ class admin{
     }
 
     public function dashboard(){
-        $pendingStudents = $this->admin->getPendingStudents();
-        $approvedStudents = $this->admin->getApprovedStudents();
+        $getStat = $this->admin->dashboard();
         View::views('admin/dashboard',[
+            'getStat' => $getStat
+        ]);
+    }
+
+    public function pendingStudent(){
+        $pendingStudents = $this->admin->getPendingStudents();
+        View::views('admin/pendingStudent',[
             'pendingStudents' => $pendingStudents,
-            'approvedStudents' => $approvedStudents
+        ]);
+    }
+
+        public function approveStudent(){
+        $approvedStudents = $this->admin->getApprovedStudents();
+        View::views('admin/approveStudent',[
+            'approvedStudents' => $approvedStudents,
         ]);
     }
 
@@ -100,5 +112,10 @@ class admin{
         }
     }   
     
+    
+    // public function logout(){
+    //     Session::destroy();
+    //     header("location: /final/login");
+    // }
     
 }

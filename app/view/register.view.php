@@ -25,6 +25,7 @@
     <input type="file" name="img"><br>    
 
     <button type="submit">submit</button>
+    Already have an account with us? <a href="/final/login">Sign IN</a>
 </form>
 
 <script src="<?= BASE_URL ?>/js/form.js"></script>

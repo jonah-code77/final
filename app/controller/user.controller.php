@@ -113,6 +113,7 @@ class user{
 
     public function home(){
         View::views("home");
+        
     }
 
     public function login(){
@@ -172,6 +173,14 @@ class user{
 
         }
     }
+
+    // public function logout(){
+    //     Session::destroy();
+    //     echo json_encode([
+    //         "status" => "success",
+    //         "redirect" => "/final/login"
+    //     ]);
+    // }
 
 }
 

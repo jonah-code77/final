@@ -2,6 +2,17 @@
 
 class admins extends Dbh {
 
+    public function dashboard(){
+        $sql = "SELECT COUNT(*) AS total_Student,
+        SUM(reg_status = 'approved') AS approved_student,
+        SUM(reg_status = 'pending') AS pending_student,
+        SUM(reg_status = 'declined') AS declined_student
+        FROM users";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetch();
+    }
+
     //generate student code
     private function generateStudentCode(){
         $this->conn->exec("INSERT INTO studentid VALUES()");
@@ -38,6 +49,7 @@ class admins extends Dbh {
     public function getApprovedStudents(){
         $sql = "SELECT * FROM users WHERE reg_status = 'approved' ORDER BY id ASC";
         $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
         return $stmt->fetchAll();
     }
 

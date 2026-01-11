@@ -29,7 +29,7 @@ class Session {
 
     public static function exist(){
         self::start();
-        if(!isset($_SESSION['name']) ){
+        if(!isset($_SESSION['email']) ){
             header('location: /final/login');
             exit;
         };

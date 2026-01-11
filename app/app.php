@@ -31,4 +31,4 @@ spl_autoload_register(function($class){
     throw new Exception("Autoload Error: Class '{$class}' not found. Checked paths: " . implode(', ', $paths));
 });
 
-// Session::start();
+ Session::start();
